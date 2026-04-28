@@ -1,0 +1,193 @@
+❌ Issue: Service not starting
+	sudo systemctl restart wazuh-manager
+❌ Issue: Port already in use
+	sudo lsof -i :5601
+❌ Issue: Dashboard not loading
+	sudo systemctl restart wazuh-dashboard
+❌ Issue: Indexer failure
+	sudo journalctl -u wazuh-indexer
+
+Wazuh Installation Errors & Solutions (Ubuntu)
+
+❌ 1. Repository / GPG Key Error
+	Error:
+	NO_PUBKEY XXXXXXXX
+	The repository is not signed
+	
+	Cause:
+
+	GPG key not added correctly.
+
+	Solution:
+
+	sudo rm -f /usr/share/keyrings/wazuh.gpg
+	curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | sudo gpg --dearmor -o /usr/share/keyrings/wazuh.gpg
+	sudo apt update
+
+❌ 2. Package Not Found (wazuh-manager / indexer)
+	Error:
+	E: Unable to locate package wazuh-manager
+	Cause:
+
+	Repository not added or updated.
+
+	Solution:
+	cat /etc/apt/sources.list.d/wazuh.list
+	sudo apt update
+
+	If missing:
+
+	echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | sudo tee /etc/apt/sources.list.d/wazuh.list
+❌ 3. Wazuh Manager Not Starting
+	Error:
+	Active: failed (Result: exit-code)
+	Cause:
+	Port conflict
+	Misconfiguration
+	Solution:
+	
+	sudo systemctl restart wazuh-manager
+	sudo journalctl -u wazuh-manager -xe
+
+	Check port:
+
+	sudo lsof -i :1514
+
+	Kill conflicting process if needed.
+
+❌ 4. Wazuh Indexer Fails to Start
+	Error:
+	wazuh-indexer.service failed
+	Common Causes:
+
+	Not enough RAM
+	Security initialization not done
+	Solution:
+	sudo /usr/share/wazuh-indexer/bin/indexer-security-init.sh
+	sudo systemctl restart wazuh-indexer
+
+	Check logs:
+
+	sudo journalctl -u wazuh-indexer -xe
+
+	👉 Minimum RAM required: 4GB+ recommended
+
+❌ 5. Java / Memory Issues (Indexer)
+	Error:
+	OutOfMemoryError
+	Cause:
+
+	Low RAM allocation in VM.
+
+	Solution:
+	Increase RAM in VirtualBox (at least 4GB–8GB)
+	Modify JVM heap:
+	sudo nano /etc/wazuh-indexer/jvm.options
+
+	Reduce:
+
+	-Xms1g
+	-Xmx1g
+
+❌ 6. Dashboard Not Loading (https://IP)
+
+	Error:
+	Site can’t be reached
+	Connection refused
+	Cause:
+
+	Service not running or firewall blocked.
+
+	Solution:
+	sudo systemctl restart wazuh-dashboard
+	sudo systemctl status wazuh-dashboard
+
+	Allow port:
+
+	sudo ufw allow 5601/tcp
+
+❌ 7. SSL / Certificate Errors
+	Error:
+	ERR_CERT_AUTHORITY_INVALID
+	Cause:
+
+	Self-signed certificate.
+
+	Solution:
+	Click Advanced → Proceed in browser
+	OR
+	Install trusted certificate (optional)
+
+❌ 8. API Connection Error (Dashboard ↔ Manager)
+	Error:
+
+	Dashboard shows:	
+	Cannot connect to Wazuh API
+	Cause:
+
+	Manager not running or API blocked.
+
+	Solution:
+	sudo systemctl restart wazuh-manager
+	sudo systemctl status wazuh-manager
+
+	Check port:
+
+	sudo netstat -tulnp | grep 55000
+
+❌ 9. Port Conflicts
+	Error:
+	Address already in use
+	Ports Used:
+	1514 → Agent communication
+	1515 → Enrollment
+	5601 → Dashboard
+	55000 → API
+	Solution:
+	sudo lsof -i :5601
+	sudo kill -9 <PID>
+❌ 10. Service Not Enabled After Reboot
+	Error:
+
+	Service stops after restart.
+
+	Solution:
+	sudo systemctl enable wazuh-manager
+	sudo systemctl enable wazuh-indexer
+	sudo systemctl enable wazuh-dashboard
+
+❌ 11. Time Sync Issues (Very Common)
+	Error:
+	Agents not connecting
+	Logs mismatch
+	Cause:
+
+	Time difference between systems.
+
+	Solution:
+	sudo timedatectl set-ntp true
+
+❌ 12. Permission Errors
+	Error:
+	Permission denied
+	Solution:
+	sudo chown -R wazuh:wazuh /var/ossec
+	sudo chmod -R 750 /var/ossec
+
+❌ 13. Dashboard Login Failed
+	Error:
+	Invalid username/password
+	Solution:
+
+	Reset password:
+
+ 	sudo /usr/share/wazuh-indexer/plugins/opensearch-security/tools/wazuh-passwords-tool.sh
+
+❌ 14. Slow Performance / Hanging
+	Cause:
+	Low RAM
+	CPU limit
+	Solution:
+	Increase RAM (min 4GB)
+	Increase CPU cores (2+)
+	Disable unnecessary services

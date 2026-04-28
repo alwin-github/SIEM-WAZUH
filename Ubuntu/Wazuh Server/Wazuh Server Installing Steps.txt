@@ -1,0 +1,110 @@
+Wazuh SIEM Installation on Ubuntu
+
+Step 1: System Preparation
+	1.1 Update and Upgrade System
+	sudo apt update && sudo apt upgrade -y
+     1.2 Set Hostname (Recommended)
+	sudo hostnamectl set-hostname wazuh-server
+
+	Verify:
+
+	hostnamectl
+
+Step 2: Install Required Dependencies
+	sudo apt install curl apt-transport-https unzip wget gnupg lsb-release -y
+
+	These packages are required for:
+
+	Secure repository communication
+	Package downloads
+	System compatibility
+
+Step 3: Add Wazuh Repository
+	3.1 Import GPG Key
+	curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | sudo gpg --dearmor -o /usr/share/keyrings/wazuh.gpg
+     3.2 Add Repository
+	echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | sudo tee /etc/apt/sources.list.d/wazuh.list
+     3.3 Update Repository List
+	sudo apt update
+
+Step 4: Install Wazuh Components
+
+	Wazuh consists of 3 main components:
+
+	Manager (core engine)
+	Indexer (data storage)
+	Dashboard (visualization)
+
+Step 5: Install Wazuh Manager
+	sudo apt install wazuh-manager -y
+     5.1 Start and Enable Service
+	sudo systemctl daemon-reexec
+	sudo systemctl enable wazuh-manager
+	sudo systemctl start wazuh-manager
+     5.2 Verify Service
+	sudo systemctl status wazuh-manager
+     5.3 Check Logs
+	sudo tail -f /var/ossec/logs/ossec.log
+
+Step 6: Install Wazuh Indexer
+	sudo apt install wazuh-indexer -y
+     6.1 Configure Indexer (Initial Setup)
+	sudo /usr/share/wazuh-indexer/bin/indexer-security-init.sh
+     6.2 Start Service
+	sudo systemctl daemon-reexec
+	sudo systemctl enable wazuh-indexer
+	sudo systemctl start wazuh-indexer
+6.3 Verify
+	sudo systemctl status wazuh-indexer
+
+Step 7: Install Wazuh Dashboard
+	sudo apt install wazuh-dashboard -y
+     7.1 Start Dashboard
+	sudo systemctl enable wazuh-dashboard
+	sudo systemctl start wazuh-dashboard
+     7.2 Verify
+	sudo systemctl status wazuh-dashboard
+
+Step 8: Configure Firewall
+	sudo ufw allow 1514/tcp   # Agent communication
+	sudo ufw allow 1515/tcp   # Agent enrollment
+	sudo ufw allow 55000/tcp  # API
+	sudo ufw allow 5601/tcp   # Dashboard
+	sudo ufw enable
+
+Step 9: Access Wazuh Dashboard
+
+	Open browser:
+
+	https://<your-server-ip>
+	Default Credentials:	
+	Username: admin
+	Password: admin
+
+Step 10: Verify Full Stack Integration
+
+	Check all services:
+
+	sudo systemctl status wazuh-manager
+	sudo systemctl status wazuh-indexer
+	sudo systemctl status wazuh-dashboard
+
+	Check ports:
+
+	sudo netstat -tulnp | grep -E "1514|1515|5601"
+
+Step 11: Test Wazuh Manager
+
+	Add a test log:
+
+	logger "Wazuh test log from server"
+
+	Then check:
+
+	sudo tail -f /var/ossec/logs/ossec.log
+
+Step 12: Directory Structure Understanding
+	/var/ossec/ → Wazuh core directory
+	/var/ossec/logs/ → Logs
+	/var/ossec/etc/ → Configuration files
+	/etc/wazuh-dashboard/ → Dashboard configs
