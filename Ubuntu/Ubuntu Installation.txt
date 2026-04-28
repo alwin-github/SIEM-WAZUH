@@ -1,0 +1,73 @@
+## 🐧 Install Ubuntu on VirtualBox
+
+### 🔧 Prerequisites
+- Install Oracle VM VirtualBox
+- Download Ubuntu ISO file (from official website)
+
+---
+
+### ⚙️ Step 1: Create a New Virtual Machine
+1. Open VirtualBox  
+2. Click **New**  
+3. Enter Name: `Ubuntu SIEM Server`  
+4. Type: `Linux`  
+5. Version: `Ubuntu (64-bit)`  
+6. Click **Next**
+
+---
+
+### 💾 Step 2: Allocate Memory (RAM)
+- Minimum: **2 GB (2048 MB)**  
+- Recommended: **4 GB or more**  
+- Click **Next**
+
+---
+
+### 💽 Step 3: Create Virtual Hard Disk
+1. Select **Create a virtual hard disk now**  
+2. Choose **VDI (VirtualBox Disk Image)**  
+3. Select **Dynamically allocated**  
+4. Set size: **25 GB or more**  
+5. Click **Create**
+
+---
+
+### 📀 Step 4: Attach Ubuntu ISO
+1. Select your VM → Click **Settings**  
+2. Go to **Storage**  
+3. Under Controller IDE → Click **Empty**  
+4. Click disk icon → **Choose a disk file**  
+5. Select the downloaded Ubuntu ISO  
+6. Click **OK**
+
+---
+
+### ▶️ Step 5: Start Installation
+1. Select the VM → Click **Start**  
+2. Choose **Install Ubuntu**
+
+---
+
+### 🌍 Step 6: Ubuntu Setup
+1. Select Language  
+2. Choose **Normal Installation**  
+3. Select **Erase disk and install Ubuntu** (safe for VM)  
+4. Select your location  
+5. Create:
+   - Username  
+   - Password  
+6. Click **Install**
+
+---
+
+### ⏳ Step 7: Complete Installation
+- Wait for installation to finish  
+- Click **Restart Now**  
+- Remove ISO when prompted  
+
+---
+
+### ✅ Step 8: Post-Installation (Optional)
+- Update system:
+  ```bash
+  sudo apt update && sudo apt upgrade -y
