@@ -90,13 +90,13 @@ Complete the installation process for both Ubuntu and Windows 10
 
 After setting up the virtual machines:
 
-Use Ubuntu as the SIEM Server
-Responsible for log collection, analysis, and threat detection
-Hosts the SIEM platform (e.g., Wazuh/ELK stack)
-Use Windows 10 as the Agent System
-Acts as an endpoint machine
-Generates logs and security events
-Sends collected data to the SIEM server for monitoring
+a) Use Ubuntu as the SIEM Server
+b) Responsible for log collection, analysis, and threat detection
+c) Hosts the SIEM platform (e.g., Wazuh/ELK stack)
+d) Use Windows 10 as the Agent System
+e) Acts as an endpoint machine
+f) Generates logs and security events
+g) Sends collected data to the SIEM server for monitoring
 
 # ✅ Advantages of SIEM
 
