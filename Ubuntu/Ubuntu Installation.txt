@@ -1,73 +1,76 @@
-## 🐧 Install Ubuntu on VirtualBox
+ Installation of Ubuntu on VirtualBox (Detailed Report)
+1. Introduction
 
-### 🔧 Prerequisites
-- Install Oracle VM VirtualBox
-- Download Ubuntu ISO file (from official website)
+To set up the SIEM environment, a virtualized infrastructure is created using Oracle VM VirtualBox. Ubuntu is used as the primary operating system for deploying the SIEM server due to its stability, security, and compatibility with cybersecurity tools.
 
----
+2. Prerequisites
 
-### ⚙️ Step 1: Create a New Virtual Machine
-1. Open VirtualBox  
-2. Click **New**  
-3. Enter Name: `Ubuntu SIEM Server`  
-4. Type: `Linux`  
-5. Version: `Ubuntu (64-bit)`  
-6. Click **Next**
+Before starting the installation, the following requirements must be fulfilled:
 
----
+A system with at least 8 GB RAM (recommended)
+Minimum 25 GB free storage
+Installed VirtualBox software
+Downloaded Ubuntu ISO file from the official website
 
-### 💾 Step 2: Allocate Memory (RAM)
-- Minimum: **2 GB (2048 MB)**  
-- Recommended: **4 GB or more**  
-- Click **Next**
+3. Virtual Machine Creation
 
----
+The first step is to create a virtual machine in VirtualBox:
 
-### 💽 Step 3: Create Virtual Hard Disk
-1. Select **Create a virtual hard disk now**  
-2. Choose **VDI (VirtualBox Disk Image)**  
-3. Select **Dynamically allocated**  
-4. Set size: **25 GB or more**  
-5. Click **Create**
+a) Open VirtualBox and click on New
+b) Assign a name such as Ubuntu SIEM Server
+c) Select Type: Linux and Version: Ubuntu (64-bit)
+d) Allocate memory (minimum 2 GB, recommended 4 GB or more)
+e) Create a virtual hard disk:
+f) Choose VDI (Virtual Disk Image)
+g) Select Dynamically Allocated
+h) Allocate at least 25 GB of storage
 
----
+This step establishes a virtual environment where Ubuntu will be installed.
 
-### 📀 Step 4: Attach Ubuntu ISO
-1. Select your VM → Click **Settings**  
-2. Go to **Storage**  
-3. Under Controller IDE → Click **Empty**  
-4. Click disk icon → **Choose a disk file**  
-5. Select the downloaded Ubuntu ISO  
-6. Click **OK**
+4. ISO Configuration
 
----
+After creating the virtual machine, the Ubuntu ISO file must be attached:
 
-### ▶️ Step 5: Start Installation
-1. Select the VM → Click **Start**  
-2. Choose **Install Ubuntu**
+a) Go to Settings → Storage
+b) Under the controller, select Empty
+c) Click on the disk icon and choose “Choose a disk file”
+d) Select the downloaded Ubuntu ISO file
 
----
+This allows the virtual machine to boot from the Ubuntu installer.
 
-### 🌍 Step 6: Ubuntu Setup
-1. Select Language  
-2. Choose **Normal Installation**  
-3. Select **Erase disk and install Ubuntu** (safe for VM)  
-4. Select your location  
-5. Create:
-   - Username  
-   - Password  
-6. Click **Install**
+5. Ubuntu Installation Process
 
----
+Once the setup is complete, the installation process begins:
 
-### ⏳ Step 7: Complete Installation
-- Wait for installation to finish  
-- Click **Restart Now**  
-- Remove ISO when prompted  
+a) Start the virtual machine
+b) Select Install Ubuntu from the boot menu
+c) Choose the preferred language
+d) Select Normal Installation for full features
+e) Choose Erase disk and install Ubuntu (this only affects the virtual disk)
+f) Select the correct time zone and keyboard layout
+g) Create a user account by setting a username and password
 
----
+The system will then copy files and install the operating system.
 
-### ✅ Step 8: Post-Installation (Optional)
-- Update system:
-  ```bash
-  sudo apt update && sudo apt upgrade -y
+6. Completion of Installation
+
+After installation:
+
+a) Click on Restart Now
+b) Remove the ISO file when prompted to avoid boot loop
+c) Log in using the created credentials
+
+At this stage, Ubuntu is successfully installed on the virtual machine.
+
+7. Post-Installation Setup
+
+To prepare the system for SIEM deployment, basic updates and configurations are required:
+
+Update system packages:
+
+sudo apt update && sudo apt upgrade -y
+(Optional) Install Guest Additions for better performance and screen resolution
+
+8. Conclusion
+
+The successful installation of Ubuntu on VirtualBox provides a stable and isolated environment for deploying SIEM tools. This setup forms the foundation for implementing log management, threat detection, and security monitoring in the project.
