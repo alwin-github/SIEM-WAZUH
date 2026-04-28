@@ -1,0 +1,132 @@
+Configure Windows as Wazuh Agent & Connect to Ubuntu Server
+
+Step 1: Get Ubuntu Server IP
+
+	On your Ubuntu (Wazuh Server), run:
+
+	ip a
+
+	Note the IP (example):
+
+	192.168.29.32
+
+Step 2: Download Wazuh Agent (Windows)
+
+	On your Windows 10 VM:
+
+	Open browser
+	Go to official Wazuh download page
+	Download Windows Agent (.msi)
+
+Step 3: Install Wazuh Agent
+
+	Run the installer and during setup:
+
+	Manager IP → Enter your Ubuntu IP
+
+	192.168.29.32
+
+	Agent Name → Example:
+
+	windows-agent
+	Group → default
+
+	Click Install
+
+Step 4: Configure Agent (Manual Method – Important for Viva)
+
+	Open this file in Windows:
+
+	C:\Program Files (x86)\ossec-agent\ossec.conf
+	
+	Modify:
+
+		<client>
+  			<server>
+    			   <address>192.168.29.32</address>
+    			   <port>1514</port>
+                           <protocol>tcp</protocol>
+                        </server>
+		</client>
+
+Step 5: Start Wazuh Agent Service
+
+	Open Services (services.msc):
+
+	Find: Wazuh Agent
+	Click:
+	Start
+	Set to Automatic
+
+	OR via command:
+
+	net start wazuh-agent
+
+Step 6: Open Firewall Ports (IMPORTANT)
+	On Ubuntu:
+	sudo ufw allow 1514/tcp
+	sudo ufw allow 1515/tcp
+	On Windows:
+
+	Allow inbound rule for:
+
+	Port 1514
+	Port 1515
+
+Step 7: Register Agent (If not auto-connected)
+
+	On Ubuntu:
+
+	sudo /var/ossec/bin/manage_agents
+	Steps:
+	Press A → Add agent
+	Enter:
+	Name → windows-agent
+	IP → Windows IP
+	Press E → Extract key
+	Copy the key
+
+Step 8: Add Key in Windows
+
+	On Windows:
+
+	"C:\Program Files (x86)\ossec-agent\manage_agents.exe"
+	Choose Import Key
+	Paste the copied key
+
+	Restart agent:
+
+	net stop wazuh-agent
+	net start wazuh-agent
+
+Step 9: Verify Connection (VERY IMPORTANT)
+
+	On Ubuntu:
+
+	sudo /var/ossec/bin/agent_control -l
+
+	You should see:
+
+	ID: 001, Name: windows-agent, Status: Active
+
+Step 10: Check in Dashboard
+
+	Go to:
+
+	https://<ubuntu-ip>
+
+	Navigate:
+	Agents → Windows Agent
+
+	Status should be:
+	Active
+
+Step 11: Test Log Detection
+
+	On Windows:
+
+	whoami
+
+	Or login attempts → generates logs
+
+	Then check dashboard → alerts will appear

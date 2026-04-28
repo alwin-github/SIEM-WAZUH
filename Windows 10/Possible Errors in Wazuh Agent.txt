@@ -1,0 +1,177 @@
+❌ 1. Agent Status = “Disconnected”
+	Why it happens:
+	Agent service not running
+	Network issue
+	Wrong server IP
+        Solution:
+
+	On Windows:
+
+	net start wazuh-agent
+
+	Check config:
+
+	C:\Program Files (x86)\ossec-agent\ossec.conf
+
+	Ensure:
+
+	<address>YOUR_UBUNTU_IP</address>
+
+❌ 2. Agent Not Showing in Dashboard
+	
+	Cause:
+	Agent not registered
+	Key not added
+	Solution:
+
+	On Ubuntu:
+
+	sudo /var/ossec/bin/manage_agents
+	Add agent
+	Extract key
+
+	On Windows:
+
+	manage_agents.exe
+	Import key
+
+	Restart agent
+
+❌ 3. Connection Refused (Port Issue)
+	Cause:
+
+	Ports blocked by firewall
+
+	Solution:
+
+	On Ubuntu:
+
+	sudo ufw allow 1514/tcp
+	sudo ufw allow 1515/tcp
+
+	On Windows:
+
+	Allow inbound rules for same ports
+
+❌ 4. “No route to host”
+	Cause:
+	VM network misconfigured
+	Different subnet
+	Solution:
+	Set both VMs to:
+	Bridged Adapter OR
+	Same NAT network
+
+	Check:
+
+	ip a
+
+❌ 5. Authentication Key Error
+	Error:
+	Invalid key / authentication failed
+	Cause:
+	Wrong key pasted
+	Key mismatch
+	Solution:
+	Recreate agent
+	Extract new key
+	Paste correctly
+
+❌ 6. Manager Not Running
+	Cause:
+
+	Server service stopped
+
+	Solution:
+	sudo systemctl restart wazuh-manager
+	sudo systemctl status wazuh-manager
+
+❌ 7. Time Sync Issue
+	Cause:
+
+	Time mismatch between Windows & Ubuntu
+
+	Solution:
+
+	Ubuntu:
+
+	sudo timedatectl set-ntp true
+
+	Windows:
+
+	Sync time from internet
+
+❌ 8. Agent Service Not Starting (Windows)
+	Cause:
+	Corrupted install
+	Missing permissions
+	Solution:
+	net stop wazuh-agent
+	net start wazuh-agent
+
+	If fails:
+
+	Reinstall agent
+
+❌ 9. Logs Not Appearing in Dashboard
+	Cause:
+	Agent connected but not sending logs
+	Solution:
+
+	Restart:
+
+	net stop wazuh-agent
+	net start wazuh-agent
+
+	Test:
+
+	whoami
+
+	Check dashboard again
+
+❌ 10. Duplicate Agent ID Issue
+	Cause:
+
+	Same agent added multiple times
+
+	Solution:
+	sudo /var/ossec/bin/manage_agents
+	Delete duplicate agents
+	Re-add fresh
+
+❌ 11. SSL / Certificate Issues
+	Cause:
+
+	Secure communication mismatch
+
+	Solution:
+	Reinitialize certificates on server
+	Restart services
+
+❌ 12. High Latency / Slow Connection
+	Cause:
+	Low RAM
+	Heavy indexing
+	Solution:
+	Increase VM RAM (4GB+)
+	Reduce load
+
+❌ 13. Agent Connected but Status = “Pending”
+	Cause:
+
+	Enrollment incomplete
+
+	Solution:
+	Restart both:
+	sudo systemctl restart wazuh-manager
+	net stop wazuh-agent
+	net start wazuh-agent
+
+❌ 14. Wrong IP Configuration
+	Cause:
+
+	Dynamic IP changed
+
+	Solution:
+	Update IP in:
+	ossec.conf
